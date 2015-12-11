@@ -1,0 +1,49 @@
+body,ul{
+  padding: 0;
+  margin: 0;
+}
+
+body{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+  background-image: url(http://b173.photo.store.qq.com/psb?/V10Lf9QM1pN7lC/YJn4F8WzYpYvEWe3*PsFbi3unwpjG325EcHC*Z6mcuc!/b/dLcOKmfIEgAA&bo=.wFiAQAAAAABAL4!&rf=viewer_4);
+  background-size: 100%;
+}
+
+.wrap{
+  position: absolute;
+  z-index: 1;
+  box-sizing:border-box;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(10,10,10,0.9);
+}
+
+.wrap img{
+  height: 80%;
+  margin: auto;
+  display: block;
+  border-radius: 2px;
+  border:1px solid #fff;
+}
+
+.wrap input{
+	outline: none;
+	position: absolute;
+	bottom: 10px;
+	left:5px;
+	width: 180px;
+    cursor: pointer;
+    background-color: #333;
+    padding: 10px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+iframe{
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
+}
