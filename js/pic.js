@@ -1,5 +1,4 @@
 $(function(){
-	var info = '载入以逗号分隔的图片的URL文件，即可使用方向键，浏览URL对应的图片'; 
 	var  animate ={
 	    style:["bounce","flash","pulse","rubberBand","shake","swing","tada","wobble","jello","bounceIn","bounceInDown",
 	            "bounceInLeft","bounceInRight","bounceInUp",
@@ -58,6 +57,10 @@ $(function(){
 				}
 				return urls[_index];	
 			},
+			random:function(){
+				index = Math.floor(Math.random()*urls.length);
+				return urls[index];
+			},
 			addUrls:function(_urls){
 				if(Array.isArray(urls)){
 					urls = _urls;
@@ -68,108 +71,283 @@ $(function(){
 		}
 	})();
 
-	var preLoadImage = new Image();
-	var $img = $('#photo');
-	
-	var togglePlay = (function(){
-		var isPlaying = false;
-		var intervalId;
-		return function(){
-			if(isPlaying === false){
-				isPlaying = true;
-				showNext();
-				intervalId = setInterval(function(){
-					showNext();
-					console.log('-->');
-				},2000);
-			}else{
-				isPlaying = false;
-				clearInterval(intervalId);
-				console.log('stop');
-			}
-		}
+	(function(){
+		var $img = $('img'),
+			windowWidth = $('body').width(),
+			windowHeight = $('body').height(),
+			imgWidth = $img.width(),
+			imgHeight = $img.height(),
+			marginTop = (windowHeight - imgHeight) / 2;
+
+		$img.css("marginTop",marginTop+'px');
 	})();
 
-	var showNext = function(){
-		var	style = animate.pickStyle(),
-			url = '';
+	function resize($img){
+		$img.css({
+			height:"",
+			width:""
+		});
+		
+		var	windowWidth = $('body').width(),
+			windowHeight = $('body').height(),
+			imgWidth = $img.width(),
+			imgHeight = $img.height();
 
-		url = imagesData.getNext();
-		preLoadImage.src = imagesData.next();
-		$img.attr('src', url );
-		$img.attr('class',style);
-	};
-
-	var showPrevious = function(){
-		var	style = animate.pickStyle(),
-			url = '';
-
-		url = imagesData.getPrevious();
-		preLoadImage.src = imagesData.previous();
-		$img.attr('src', url );
-		$img.attr('class',style);	
-	};
-	var toggleMusic = (function(){
-		var audio = $('audio').get(0);
-		var isPlaying = false;
-		return function(){
-			if(isPlaying == false){
-				isPlaying = true;
-				audio.play();
-			}else{
-				isPlaying = false;
-				audio.pause();
+		//  desktop
+		if( windowWidth > windowHeight ){
+			if( imgWidth > windowWidth ){
+				$img.css({
+					width:windowWidth * 0.9 +'px',
+					height:imgHeight * ( (windowWidth * 0.9)/imgWidth) + 'px'
+				});
+			}
+		}		
+		// phone or pad
+		else{
+			if( imgHeight > windowHeight ){
+				$img.css({
+					height:windowHeight + 'px',
+					width:imgWidth * (windowWidth/imgWidth) + 'px'
+				});
 			}
 		}
-	})();
+		$img.css({
+			marginTop:(windowHeight - $img.height())/2 + 'px'
+		});	
+	}
+
+	var Player = (function(){
+		var preLoadImage = new Image();
+		var $img = $('#photo');
+		var _isPlaying = false;
+
+		var toggleAutoPlay = (function(){
+			var intervalId;			
+			return function(isRandom){
+				if(_isPlaying === false){
+					_isPlaying = true;
+					if(isRandom == true){
+						showRandom();
+					}else{
+						showNext();
+					}
+					intervalId = setInterval(function(){
+						if(isRandom == true){
+							showRandom();
+						}else{
+							showNext();
+						}
+					},2000);
+				}else{
+					_isPlaying = false;
+					clearInterval(intervalId);
+				}
+				if(_isPlaying == false){
+					$('#sequence').text('顺序播放');
+					$('#random').text('随机播放');
+				}else{
+					$('#sequence').text('暂停播放');
+					$('#random').text('暂停播放');
+				}
+			}
+		})();
+		var isPlaying = function(){
+			return _isPlaying;
+		}
+		var showNext = function(){
+			var	style = animate.pickStyle(),
+				url = '';
+
+			url = imagesData.getNext();
+			preLoadImage.src = imagesData.next();
+			$img.attr('src', url );
+			$img.attr('class',style);
+			resize($img);	
+		};
+
+		var showPrevious = function(){
+			var	style = animate.pickStyle(),
+				url = '';
+
+			url = imagesData.getPrevious();
+			preLoadImage.src = imagesData.previous();
+			$img.attr('src', url );
+			$img.attr('class',style);
+			resize($img);	
+		};
+		var showRandom = function(){
+			var	style = animate.pickStyle(),
+				url = '';
+
+			url = imagesData.random();
+			preLoadImage.src = imagesData.previous();
+			$img.attr('src', url );
+			$img.attr('class',style);
+			resize($img);	
+		};
+		var toggleMusic = (function(){
+			var audio = $('audio').get(0);
+			var isPlayingMusic = false;
+			return function(){
+				if(isPlayingMusic == false){
+					isPlayingMusic = true;
+					audio.play();
+				}else{
+					isPlayingMusic = false;
+					audio.pause();
+				}
+				if(isPlayingMusic == false){
+					$('#music-control').text('播放音乐');
+				}else{
+					$('#music-control').text('暂停音乐');
+				}
+			}
+		})();
+		return {
+			toggleAutoPlay:toggleAutoPlay,
+			showNext:showNext,
+			showPrevious:showPrevious,
+			toggleMusic:toggleMusic,
+			showRandom:showRandom,
+			isPlaying:isPlaying
+		};
+	})(); 
 
 
 	(function(){
-		var	$img = $('img'),
-			windowHeight = $('body').height(),
-			imgHeight = $img.height(),
-			marginTop = (windowHeight - imgHeight) / 2;
-		$img.css('marginTop',marginTop + 'px');
+		$.getJSON("../src/urls.json",function(data){
+			imagesData.addUrls(data.urls);
+			Player.showNext();
+		});
 	})();
-
-	$('input').on("change",function(){
-		if(this.files.length == 0){
-			return;
-		}
-		var fileReader = new FileReader();
-		
-		fileReader.readAsText(this.files[0]);
-		fileReader.onload = function(){
-			imagesData.clear();
-			imagesData.addUrls(fileReader.result.split(/,|,\n/));
-			showNext();
-		}
-	});
-
-	$('input').hover(
-	function(){
-		$('input').animate({
-			left:'5px'
-		},500);
-	},
-	function(){
-		$('input').animate({
-			left:'-180px'
-		},500);	
-	});
 
 	$('body').keyup(function(event){
 		var key = event.which;
 		console.log(key);
 
 		if( key == 37 || key == 38 ){ // pre
-			showPrevious();
+			Player.showPrevious();
 		}else if( key == 39  || key == 40 ){ // next
-			showNext();
+			Player.showNext();
 		}else if( key == 80 ){  //press 'p' autoplay or stop autoplay
-			togglePlay();
+			Player.toggleAutoPlay();
 		}else if( key == 77){ // 'm'  music
-			toggleMusic();
+			Player.toggleMusic();
 		}
 	});
+
+	$('body').click(function(){
+		$('.control').toggleClass('control-show');
+	});
+
+	$('#sequence').click(function(){
+		Player.toggleAutoPlay();
+	});
+
+	$('#random').click(function(){
+		Player.toggleAutoPlay(/*isRandom = */ true);
+	});
+
+	$('#music-control').click(function(){
+		Player.toggleMusic();
+	});
+
+	$('#full-screen').click(function(){
+		var fullScreenElement = document.fullscreenElement ||  
+		    document.webkitFullscreenElement ||  
+		    document.mozFullScreenElement ||  
+		    document.msFullscreenElement;
+		if ( fullScreenElement ){
+			if (document.exitFullscreen) {  
+			    document.exitFullscreen();  
+			} else if (document.webkitExitFullscreen) {  
+			    document.webkitExitFullscreen();  
+			} else if (document.mozCancelFullScreen) {  
+			    document.mozCancelFullScreen();  
+			} else if (document.msExitFullscreen) {  
+			    document.msExitFullscreen();  
+			}
+			$(this).text('进入全屏');
+		}else{
+			var i = document.documentElement;  
+			// go full-screen  
+			if (i.requestFullscreen) {  
+			    i.requestFullscreen();  
+			} else if (i.webkitRequestFullscreen) {  
+			    i.webkitRequestFullscreen();  
+			} else if (i.mozRequestFullScreen) {  
+			    i.mozRequestFullScreen();  
+			} else if (i.msRequestFullscreen) {  
+			    i.msRequestFullscreen();  
+			}
+			$(this).text('退出全屏');
+		}
+
+	});
+	function FShandler(event){
+		var $img = $("#photo");
+		resize($img);
+	}
+	document.addEventListener("fullscreenchange", FShandler);  
+	document.addEventListener("webkitfullscreenchange", FShandler);  
+	document.addEventListener("mozfullscreenchange", FShandler);  
+	document.addEventListener("MSFullscreenChange", FShandler);  
+	
+	// touch event
+	(function(){
+		var touchPoint = {
+			start:{x:0,y:0},
+			end:{x:0,y:0}
+		};
+		var body = document.body;
+		body.addEventListener("touchmove", function(event){
+			event.preventDefault();
+		}, false);
+	 	body.addEventListener("touchstart", function(event){
+	 		touchPoint.start.x = event.changedTouches[0].pageX;
+			touchPoint.start.y = event.changedTouches[0].pageY;	
+ 			
+	 	}, false);
+		body.addEventListener("touchend", function(event){	
+	 		
+	 		touchPoint.end.x = event.changedTouches[0].pageX;
+			touchPoint.end.y = event.changedTouches[0].pageY;	
+	 		
+
+	 		var direction = '';
+	 		var xdiff = touchPoint.start.x - touchPoint.end.x;
+	 		var ydiff = touchPoint.start.y - touchPoint.end.y;
+	 		if(Math.abs(xdiff)>10||Math.abs(ydiff)>10){
+		 		if(Math.abs(xdiff)>Math.abs(ydiff)){
+		 			if(xdiff<0){
+		 				direction = 'right';
+		 			}else{
+		 				direction = 'left';
+		 			}
+		 		}else{
+		 			if(ydiff<0){
+		 				direction = 'down';
+		 			}else{
+		 				direction = 'up';
+		 			}
+		 		}
+	 		}
+			switch(direction){
+				case 'left':
+					Player.showNext();
+					break;
+				case 'up':
+					Player.toggleAutoPlay();
+				break;
+				case 'right':
+					Player.showPrevious();
+				break;
+				case 'down':
+					Player.toggleMusic();
+				break;
+				default:
+				break;
+			}
+  		}, false);
+	})();
 });

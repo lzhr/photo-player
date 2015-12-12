@@ -8,9 +8,9 @@ body{
   width: 100%;
   position: absolute;
   overflow: hidden;
-  background-image: url(http://b173.photo.store.qq.com/psb?/V10Lf9QM1pN7lC/YJn4F8WzYpYvEWe3*PsFbi3unwpjG325EcHC*Z6mcuc!/b/dLcOKmfIEgAA&bo=.wFiAQAAAAABAL4!&rf=viewer_4);
   background-size: 100%;
 }
+
 
 .wrap{
   position: absolute;
@@ -25,9 +25,10 @@ body{
   height: 80%;
   margin: auto;
   display: block;
-  border-radius: 2px;
   border:1px solid #fff;
 }
+
+
 
 .wrap input{
 	outline: none;
@@ -42,8 +43,112 @@ body{
     border-radius: 5px;
 }
 
-iframe{
-	position: absolute;
-	right: 5px;
-	bottom: 5px;
+
+button{
+	cursor: pointer;
+}
+
+
+@media screen and (min-width: 900px){
+  	body{
+		background-image: url(http://7xj0pq.com1.z0.glb.clouddn.com/hqcqds.jpg);
+  	}
+  	.control{
+		position: absolute;
+		width: 400px;
+		height: 50px;
+		left: 0;
+		bottom: 5px;
+		z-index: 100;
+		background-color: #333;
+		border-radius: 0 5px 5px 0;
+		-webkit-transition: 500ms;
+		-o-transition: 500ms;
+		transition: 500ms;
+	}
+	.control button{
+		display: inline-block;
+		float: left;
+		vertical-align: middle;
+		width: 80px;
+		height: 30px;
+		color: #aaa;
+		border-radius: 5px;
+		background-color: #333;
+		border: 1px solid #222;
+		margin: 10px 10px 10px 0;
+		outline: none;
+		background-image: -webkit-linear-gradient(top right, #333, #222);
+		background-image: -o-linear-gradient(top right, #333, #222);
+		background-image: linear-gradient(to bottom left, #333, #222);
+
+	}
+	.control button:first-of-type{
+		margin-left: 10px;
+	}
+
+	.control button:hover{
+		background-color: #222;
+	}
+	.control-show{
+		left: -380px;
+		-webkit-transition: 500ms;
+		-o-transition: 500ms;
+		transition: 500ms;
+	} 
+}
+
+@media screen and (max-width: 900px){
+	.wrap img{
+  		height:initial;
+  		width: 100%;
+  		border:none;
+	}
+	.wrap{
+		background-color: #000;
+	}
+	.control{
+		position: absolute;
+		width: 100%;
+		height: 140px;
+		background-color: #333;
+		left: 0;
+		bottom: 0;
+		z-index: 0;
+		box-shadow:0 -1px 1px -1px #ccc;
+		opacity: 0;
+		-webkit-transition: 1000ms;
+		-o-transition: 1000ms;
+		transition: 1000ms;
+	}
+
+
+	.control button{
+		display: inline-block;
+		float: left;
+		padding: 10px 0px 10px 0px;
+		width: 40%;
+		height: 40px;
+		color: #aaa;
+		border-radius: 5px;
+		background-color: #333;
+		border: 1px solid #222;
+		margin: 20px 5% 0 5%;
+		outline: none;
+		background-image: -webkit-linear-gradient(top right, #333, #222);
+		background-image: -o-linear-gradient(top right, #333, #222);
+		background-image: linear-gradient(to bottom left, #333, #222);
+	}
+
+	.control button:hover{
+		background-color: #222;
+	}
+
+	.control-show{
+		opacity: 1!important;
+		z-index: 20;
+		-webkit-transition: 1000ms;
+		-o-transition: 1000ms;
+		transition: 1000ms;
+	} 
 }
