@@ -9,6 +9,7 @@ body{
   position: absolute;
   overflow: hidden;
   background-size: 100%;
+  font-size: 16px;
 }
 
 
@@ -30,20 +31,6 @@ body{
 
 
 
-.wrap input{
-	outline: none;
-	position: absolute;
-	bottom: 10px;
-	left:5px;
-	width: 180px;
-    cursor: pointer;
-    background-color: #333;
-    padding: 10px;
-    color: #fff;
-    border-radius: 5px;
-}
-
-
 button{
 	cursor: pointer;
 }
@@ -53,12 +40,12 @@ button{
   	body{
 		background-image: url(http://7xj0pq.com1.z0.glb.clouddn.com/hqcqds.jpg);
   	}
-  	.control{
+  	.panel{
 		position: absolute;
 		width: 400px;
 		height: 50px;
 		left: 0;
-		bottom: 5px;
+		bottom: 8px;
 		z-index: 100;
 		background-color: #333;
 		border-radius: 0 5px 5px 0;
@@ -66,7 +53,7 @@ button{
 		-o-transition: 500ms;
 		transition: 500ms;
 	}
-	.control button{
+	.panel button{
 		display: inline-block;
 		float: left;
 		vertical-align: middle;
@@ -83,14 +70,14 @@ button{
 		background-image: linear-gradient(to bottom left, #333, #222);
 
 	}
-	.control button:first-of-type{
+	.panel button:first-of-type{
 		margin-left: 10px;
 	}
 
-	.control button:hover{
+	.panel button:hover{
 		background-color: #222;
 	}
-	.control-show{
+	.panel-show{
 		left: -380px;
 		-webkit-transition: 500ms;
 		-o-transition: 500ms;
@@ -107,7 +94,7 @@ button{
 	.wrap{
 		background-color: #000;
 	}
-	.control{
+	.panel{
 		position: absolute;
 		width: 100%;
 		height: 140px;
@@ -121,9 +108,7 @@ button{
 		-o-transition: 1000ms;
 		transition: 1000ms;
 	}
-
-
-	.control button{
+	.panel button{
 		display: inline-block;
 		float: left;
 		padding: 10px 0px 10px 0px;
@@ -140,15 +125,15 @@ button{
 		background-image: linear-gradient(to bottom left, #333, #222);
 	}
 
-	.control button:hover{
+	.panel button:hover{
 		background-color: #222;
 	}
 
-	.control-show{
+	.panel-show{
 		opacity: 1!important;
 		z-index: 20;
 		-webkit-transition: 1000ms;
 		-o-transition: 1000ms;
 		transition: 1000ms;
-	} 
+	}
 }
